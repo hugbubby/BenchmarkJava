@@ -60,7 +60,8 @@ public class BenchmarkTest01929 extends HttpServlet {
             a1 = "sh";
             a2 = "-c";
         }
-        String[] args = {a1, a2, "echo " + bar};
+        String sanitizedBar = sanitizeInput(bar);
+        String[] args = {a1, a2, "echo " + sanitizedBar};
 
         ProcessBuilder pb = new ProcessBuilder(args);
 
@@ -74,6 +75,11 @@ public class BenchmarkTest01929 extends HttpServlet {
         }
     } // end doPost
 
+    private static String sanitizeInput(String input) {
+        // Remove any character that is not alphanumeric or space
+        return input.replaceAll("[^a-zA-Z0-9 ]", "");
+    }
+
     private static String doSomething(HttpServletRequest request, String param)
             throws ServletException, IOException {
 
@@ -84,6 +90,11 @@ public class BenchmarkTest01929 extends HttpServlet {
         map44.put("keyC", "another-Value"); // put some stuff in the collection
         bar = (String) map44.get("keyB-44"); // get it back out
 
-        return bar;
+        return sanitizeInput(bar);
+    }
+
+    private static String sanitizeInput(String input) {
+        // Remove any character that is not alphanumeric or space
+        return input.replaceAll("[^a-zA-Z0-9 ]", "");
     }
 }
